@@ -18,7 +18,7 @@ SYMS        [a-z]
 SYMB        [A-Z]
 SYMV        [a-z_A-Z0-9]
 NUMBER      (0|-?[1-9]{DIGITS}*)
-FLOAT       -?{NUMBER}\.{DIGITS}*
+FLOAT       {NUMBER}\.{DIGITS}*
 STRING      \".*\"
 TYPE_ID     {SYMB}{SYMV}*
 VARIABLE    {SYMS}{SYMV}*
