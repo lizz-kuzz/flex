@@ -12,11 +12,11 @@ Running
 ===
 To run with text_prog:
 ```
-stasyan text_prog
+./stasyan text_prog
 ```
 To run without text_prog:
 ```
-stasyan 
+./stasyan 
 ```
 
 
