@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+
 #define ERROR 1
 %}
 %option noyywrap 
 %option yylineno 
 %{
-int yylval;
+int yylvali;
+double yylvald;
 int token_str(std::string str);
 %} 
 TAB         [ \t]
@@ -15,7 +17,8 @@ DIGITS      [0-9]
 SYMS        [a-z]
 SYMB        [A-Z]
 SYMV        [a-z_A-Z0-9]
-NUMBER      ({DIGITS}*)
+NUMBER      (0|-?[1-9]{DIGITS}*)
+FLOAT       -?{NUMBER}\.{DIGITS}*
 STRING      \".*\"
 TYPE_ID     {SYMB}{SYMV}*
 VARIABLE    {SYMS}{SYMV}*
@@ -67,8 +70,10 @@ PRINTLN         { std::cout << "Token class: KEYWORD,  Token value: PRINTLN" << 
 {TAB}           { /* ignore whitespace */ }
 {VARIABLE}      { std::cout << "Token class: VARIABLE, Token value: " << yytext << std::endl; }
 {TYPE_ID}       { std::cout << "Token class: TYPE_ID,  Token value: " << yytext << std::endl; }
-{NUMBER}        { yylval = atoi(yytext); 
-                  std::cout << "Token class: NUMBER,   Token value: " << yylval << std::endl; }
+{FLOAT}         { yylvald = atof(yytext);
+                  std::cout << "Token class: FLOAT,   Token value: " << yylvald << std::endl; }
+{NUMBER}        { yylvali = atoi(yytext); 
+                  std::cout << "Token class: NUMBER,   Token value: " << yylvali << std::endl; }
 {LONGCOMMENT}   {/* ignore comments */}
 (--).*\n?       {/* ignore comments */}
 .               { std::cout << "Undefined character:" << yytext; }
@@ -87,7 +92,7 @@ int main(int argc, char **argv)
     yylineno = 1;
     if (argc > 1) {
         if (!(yyin = fopen(argv[1], "r"))) {
-            std::cout << "error" << argv[1] << std::endl;
+            std::cout << "error " << argv[1] << std::endl;
             return ERROR;
         }
     } 
