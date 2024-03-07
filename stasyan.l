@@ -1,16 +1,9 @@
 %{
-#include <stdlib.h>
-#include <iostream>
-#include <string>
-
-#define ERROR 1
+#include "lexer.h"
 %}
 %option noyywrap 
 %option yylineno 
 %{
-int yylvali;
-double yylvald;
-int token_str(std::string str);
 %} 
 TAB         [ \t]
 DIGITS      [0-9]
@@ -33,69 +26,47 @@ NOT         (?i:not)
 PRINT       (?i:print)
 PRINTLN     (?i:println)
 LONGCOMMENT     \/\*([^*]|(\*+[^*\/]))*\*+\/
-
 %%
-"+"             { std::cout << "Token class: OP,       Token value: ADD" << std::endl; }
-"-"             { std::cout << "Token class: OP,       Token value: SUB" << std::endl; }
-"*"             { std::cout << "Token class: OP,       Token value: MUL" << std::endl; }
-"/"             { std::cout << "Token class: OP,       Token value: DIV" << std::endl; }
-"&"             { std::cout << "Token class: OP,       Token value: BITAND" << std::endl; }
-"&&"            { std::cout << "Token class: OP,       Token value: AND" << std::endl; }
-"|"             { std::cout << "Token class: OP,       Token value: BITOR" << std::endl; }
-"||"            { std::cout << "Token class: OP,       Token value: OR" << std::endl; }
-"("             { std::cout << "Token class: OP,       Token value: LBRAC" << std::endl; }
-")"             { std::cout << "Token class: OP,       Token value: RBRAC" << std::endl; }
-"="             { std::cout << "Token class: OP,       Token value: ASSIGMENT" << std::endl; }
-"=="            { std::cout << "Token class: OP,       Token value: EQ" << std::endl; }
-"!="            { std::cout << "Token class: OP,       Token value: NOTEQ" << std::endl; }
-">="            { std::cout << "Token class: OP,       Token value: GREQ" << std::endl; }
-"<="            { std::cout << "Token class: OP,       Token value: LEQ" << std::endl; }
-"<"             { std::cout << "Token class: OP,       Token value: LESS" << std::endl; }
-">"             { std::cout << "Token class: OP,       Token value: GREATER" << std::endl; }
-{IF}            { std::cout << "Token class: KEYWORD,  Token value: IF" << std::endl; }
-{ELSE}          { std::cout << "Token class: KEYWORD,  Token value: ELSE" << std::endl; }
-{LOOP}          { std::cout << "Token class: KEYWORD,  Token value: LOOP" << std::endl; }
-{THEN}          { std::cout << "Token class: KEYWORD,  Token value: THEN" << std::endl; }
-{WHILE}         { std::cout << "Token class: KEYWORD,  Token value: WHILE" << std::endl; }
-{FALSE}         { std::cout << "Token class: KEYWORD,  Token value: FALSE" << std::endl; }
-{TRUE}          { std::cout << "Token class: KEYWORD,  Token value: TRUE" << std::endl; }
-{NOT}           { std::cout << "Token class: KEYWORD,  Token value: NOT" << std::endl; }
-{PRINT}         { std::cout << "Token class: KEYWORD,  Token value: PRINT" << std::endl; }
-PRINTLN         { std::cout << "Token class: KEYWORD,  Token value: PRINTLN" << std::endl; }
-<<EOF>>         { std::cout << "EOF" << std::endl; yyterminate();}
+"+"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::ADD);}
+"-"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::SUB);}
+"*"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::MUL);}
+"/"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::DIV);}
+"&"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::BITAND);}
+"&&"            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::AND);}
+"|"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::BITOR);}
+"||"            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::OR);}
+"("             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::LBRAC);}
+")"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::RBRAC);}
+"="             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::ASSIGMENT);}
+"=="            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::EQ);}
+"!="            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::NOTEQ);}
+">="            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::GREQ);}
+"<="            { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::LEQ);}
+"<"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::LESS);}
+">"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::GREATER);}
+{IF}            { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::IF);}
+{ELSE}          { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::ELSE);}
+{LOOP}          { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::LOOP);}
+{THEN}          { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::THEN);}
+{WHILE}         { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::WHILE);}
+{FALSE}         { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::FALSE);}
+{TRUE}          { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::TRUE);}
+{NOT}           { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::NOT);}
+{PRINT}         { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::PRINT);}
+{PRINTLN}       { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::PRINTLN);}
+<<EOF>>         { Lexer::token_op_key(Lexer::token_type::SPECIAL_SYMB, Lexer::token_val::EOF1); yyterminate();}
 \n              { std::cout << std::endl;}
-{STRING}        { if (token_str(yytext) == ERROR) {
+{STRING}        { if (Lexer::token_str(yytext) == ERROR) {
                     yyterminate();
-                }}
+                  }}
 {TAB}           { /* ignore whitespace */ }
-{VARIABLE}      { std::cout << "Token class: VARIABLE, Token value: " << yytext << std::endl; }
-{TYPE_ID}       { std::cout << "Token class: TYPE_ID,  Token value: " << yytext << std::endl; }
-{FLOAT}         { yylvald = atof(yytext);
-                  std::cout << "Token class: FLOAT,   Token value: " << yylvald << std::endl; }
-{NUMBER}        { yylvali = atoi(yytext); 
-                  std::cout << "Token class: NUMBER,   Token value: " << yylvali << std::endl; }
+{VARIABLE}      { Lexer::token_ind_num(Lexer::token_type::VARIABLE, yytext); }
+{TYPE_ID}       { Lexer::token_ind_num(Lexer::token_type::TYPE_ID, yytext); }
+{FLOAT}         { Lexer::token_ind_num(Lexer::token_type::FLOAT_NUM, yytext);}
+{NUMBER}        { Lexer::token_ind_num(Lexer::token_type::INT_NUM, yytext); }
 {LONGCOMMENT}   {/* ignore comments */}
 (--).*\n?       {/* ignore comments */}
 .               { std::cout << "Undefined character:" << yytext; }
 %%
 
-int token_str(std::string str) {
-    if (str.find("\\0") != std::string::npos || str.find(EOF) != std::string::npos) {
-        std::cout << "ERROR: you use invalid character \\0  or EOF in string" << std::endl;
-        return ERROR;
-    }
-    std::cout << "Token class: STRING,   Token value: " << yytext << std::endl; 
-    return 0;
-}
-int main(int argc, char **argv)
-{
-    yylineno = 1;
-    if (argc > 1) {
-        if (!(yyin = fopen(argv[1], "r"))) {
-            std::cout << "error " << argv[1] << std::endl;
-            return ERROR;
-        }
-    } 
-    yylex();
-    std::cout << "lines = " << yylineno << std::endl; 
-}
+

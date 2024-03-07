@@ -5,7 +5,7 @@ Bool i = true
 
 
 while (i)
-  position++
+  position = position + 1
   print(position)
   if (position == 15)
     then i = false

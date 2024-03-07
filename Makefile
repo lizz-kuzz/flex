@@ -1,4 +1,4 @@
 stasyan: stasyan.l
-	@flex stasyan.l
-	@g++ lex.yy.c -lfl -o stasyan 
+	flex stasyan.l
+	g++ main.cpp lexer.cpp lex.yy.c -lfl -o stasyan 
 	
