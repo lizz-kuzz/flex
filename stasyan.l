@@ -4,7 +4,10 @@
 %option noyywrap 
 %option yylineno 
 %{
-%} 
+// %option stack
+Lexer::string_buf buf;
+%}
+%x COMMENT_MODE STRING_MODE
 TAB         [ \t]
 DIGITS      [0-9]
 SYMS        [a-z]
@@ -12,7 +15,9 @@ SYMB        [A-Z]
 SYMV        [a-z_A-Z0-9]
 NUMBER      (0|-?[1-9]{DIGITS}*)
 FLOAT       {NUMBER}\.{DIGITS}*
-STRING      \".*\"
+STRINGQUATE \"
+STRINGMID  	[^\"\n\\]+
+STRINGSPEC	\\['"?\\]
 TYPE_ID     {SYMB}{SYMV}*
 VARIABLE    {SYMS}{SYMV}*
 FALSE       f(?i:alse)
@@ -25,7 +30,9 @@ THEN        (?i:then)
 NOT         (?i:not)
 PRINT       (?i:print)
 PRINTLN     (?i:println)
-LONGCOMMENT     \/\*([^*]|(\*+[^*\/]))*\*+\/
+STARTCOMMENT    "/*"
+ENDCOMMENT      "*/"
+SHORTCOMMENT     (--).*\n?
 %%
 "+"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::ADD);}
 "-"             { Lexer::token_op_key(Lexer::token_type::OP, Lexer::token_val::SUB);}
@@ -54,19 +61,41 @@ LONGCOMMENT     \/\*([^*]|(\*+[^*\/]))*\*+\/
 {NOT}           { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::NOT);}
 {PRINT}         { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::PRINT);}
 {PRINTLN}       { Lexer::token_op_key(Lexer::token_type::KEYWORD, Lexer::token_val::PRINTLN);}
-<<EOF>>         { Lexer::token_op_key(Lexer::token_type::SPECIAL_SYMB, Lexer::token_val::EOF1); yyterminate();}
 \n              { std::cout << std::endl;}
-{STRING}        { if (Lexer::token_str(yytext) == ERROR) {
-                    yyterminate();
-                  }}
 {TAB}           { /* ignore whitespace */ }
 {VARIABLE}      { Lexer::token_ind_num(Lexer::token_type::VARIABLE, yytext); }
 {TYPE_ID}       { Lexer::token_ind_num(Lexer::token_type::TYPE_ID, yytext); }
 {FLOAT}         { Lexer::token_ind_num(Lexer::token_type::FLOAT_NUM, yytext);}
 {NUMBER}        { Lexer::token_ind_num(Lexer::token_type::INT_NUM, yytext); }
-{LONGCOMMENT}   {/* ignore comments */}
-(--).*\n?       {/* ignore comments */}
+{SHORTCOMMENT}  {/* ignore comments */}
+
+{STARTCOMMENT}             { BEGIN(COMMENT_MODE);}
+<COMMENT_MODE><<EOF>>      { std::cout << "Not a closed comment" << std::endl;
+                             yyterminate();
+                           }
+<COMMENT_MODE>{ENDCOMMENT} { BEGIN(INITIAL);}
+<COMMENT_MODE>[^*/]+ 		   {/* ignore comments */}
+
+
+{STRINGQUATE}              	{ BEGIN(STRING_MODE);  } 
+<STRING_MODE><<EOF>>        { std::cout << "Not a closed string" << std::endl;
+                              yyterminate();}
+<STRING_MODE>{STRINGQUATE} 	{ BEGIN(INITIAL); 
+							  buf.token_str(); }  
+<STRING_MODE>{STRINGSPEC}   { buf.append(yytext[1]);}
+<STRING_MODE>(\\n)          { buf.append('\n');}
+<STRING_MODE>(\\t)          { buf.append('\t');}
+<STRING_MODE>(\\0)          { std::cout << "Bad string" << std::endl;
+                              yyterminate();}
+<STRING_MODE>{STRINGMID}    { buf.append(yytext);}            
+
 .               { std::cout << "Undefined character:" << yytext; }
+<INITIAL><<EOF>>         { Lexer::token_op_key(Lexer::token_type::SPECIAL_SYMB, Lexer::token_val::EOF1); yyterminate();}
 %%
 
+// {LONGCOMMENT}   {/* ignore comments */}
+// \n                {yylineno++;}
+// ([^*\n]+)           {/* ignore comments */}
+// {ENDCOMMENT}      {BEGIN(INITIAL);}
+// }
 

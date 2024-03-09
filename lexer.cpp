@@ -124,18 +124,22 @@ void Lexer::token_ind_num(token_type type, char *yytext) {
         yylvali = atoi(yytext); 
         std::cout << "Token class: INT_NUM,\t\tToken value: " << yylvali << std::endl;
         break;
-    // 
     default:
         break;
     }
 }
 
-int Lexer::token_str(std::string str) {
-    if (str.find("\\0") != std::string::npos || str.find(EOF) != std::string::npos) {
-        std::cout << "ERROR: you use invalid character \\0  or EOF in string" << std::endl;
-        return ERROR;
-    }
-    std::cout << "Token class: STRING,\t\tToken value: " << str << std::endl; 
-    return 0;
+void Lexer::string_buf::token_str() {
+    std::cout << "Token class: STRING,\t\tToken value: \"" << buf << "\""<< std::endl; 
 }
+
+void Lexer::string_buf::append(char symb) {
+    buf.push_back(symb);
+}
+
+void Lexer::string_buf::append(char* str) {
+    buf.append(str);
+}
+
+
 

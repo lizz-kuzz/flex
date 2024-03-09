@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdlib.h>
 #include <iostream>
 #include <string>
@@ -5,11 +7,16 @@
 
 #define PRINT(var_) std::cout << #var_ << std::endl;
 #define ERROR 1
-// int yylvali;
-// double yylvald;
 
 
 namespace Lexer {
+    class string_buf {
+        std::string buf;
+    public:
+        void token_str();
+        void append(char symb);
+        void append(char *str);
+    };
     enum token_type {
         VARIABLE,
         TYPE_ID,

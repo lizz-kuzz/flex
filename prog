@@ -1,7 +1,7 @@
 Int64_t position = if true then initial + rate * -60 else 0
 Int numfloat = 5.57986
 Strint str = "34dwo"
-Bool i = true
+Bool i = true /*erd*/
 
 
 while (i)
@@ -11,4 +11,6 @@ while (i)
     then i = false
   else 
     println(str) 
-  
+/*b(asdv)jk/*l    
+ sdf*/
+/*
