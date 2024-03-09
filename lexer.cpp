@@ -101,7 +101,6 @@ void Lexer::token_op_key(token_type type, token_val val) {
         if (val == EOF1) {
             std::cout << "Token value: EOF" << std::endl;
         } 
-
     }
 }
 

@@ -4,7 +4,6 @@
 %option noyywrap 
 %option yylineno 
 %{
-// %option stack
 Lexer::string_buf buf;
 %}
 %x COMMENT_MODE STRING_MODE
@@ -92,10 +91,3 @@ SHORTCOMMENT     (--).*\n?
 .               { std::cout << "Undefined character:" << yytext; }
 <INITIAL><<EOF>>         { Lexer::token_op_key(Lexer::token_type::SPECIAL_SYMB, Lexer::token_val::EOF1); yyterminate();}
 %%
-
-// {LONGCOMMENT}   {/* ignore comments */}
-// \n                {yylineno++;}
-// ([^*\n]+)           {/* ignore comments */}
-// {ENDCOMMENT}      {BEGIN(INITIAL);}
-// }
-

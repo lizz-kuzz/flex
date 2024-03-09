@@ -4,11 +4,6 @@
 #include <iostream>
 #include <string>
 
-
-#define PRINT(var_) std::cout << #var_ << std::endl;
-#define ERROR 1
-
-
 namespace Lexer {
     class string_buf {
         std::string buf;
